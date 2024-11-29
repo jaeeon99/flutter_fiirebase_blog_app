@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fiirebase_blog_app/ui/detail/detail_page.dart';
+import 'package:flutter_fiirebase_blog_app/ui/write/write_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
-  Widget build(Object context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text('BLOG'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return WritePage();
+              },
+            ),
+          );
+        },
+        child: Icon(Icons.edit),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
