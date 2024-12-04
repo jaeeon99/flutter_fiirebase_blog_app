@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fiirebase_blog_app/data/model/post.dart';
 import 'package:flutter_fiirebase_blog_app/ui/detail/detail_page.dart';
+import 'package:flutter_fiirebase_blog_app/ui/home/home_view_model.dart';
 import 'package:flutter_fiirebase_blog_app/ui/write/write_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -37,24 +40,28 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Expanded(
-              child: ListView.separated(
-                itemCount: 10,
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 10,
+            Consumer(builder: (context, ref, child) {
+              final posts = ref.watch(HomeViewModelProvider);
+              return Expanded(
+                child: ListView.separated(
+                  itemCount: posts.length,
+                  separatorBuilder: (context, index) => SizedBox(
+                    height: 10,
+                  ),
+                  itemBuilder: (context, index) {
+                    final post = posts[index];
+                    return item(post);
+                  },
                 ),
-                itemBuilder: (context, index) {
-                  return item();
-                },
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),
     );
   }
 
-  Widget item() {
+  Widget item(Post post) {
     return Builder(builder: (context) {
       return GestureDetector(
         onTap: () {
@@ -80,7 +87,7 @@ class HomePage extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
-                    'https://picsum.photos/200/300',
+                    post.imageUrl,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -97,7 +104,7 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Today I Learned',
+                      post.title,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -105,7 +112,7 @@ class HomePage extends StatelessWidget {
                     ),
                     Spacer(),
                     Text(
-                      'Flutter Gridview 를 배움',
+                      post.content,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.grey,
@@ -116,7 +123,7 @@ class HomePage extends StatelessWidget {
                       height: 4,
                     ),
                     Text(
-                      '2024.11.29.',
+                      post.createdAt.toIso8601String(),
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 12,

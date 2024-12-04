@@ -1,7 +1,7 @@
 class Post {
   String id;
   String title;
-  String contants;
+  String content;
   String writer;
   String imageUrl;
   DateTime createdAt;
@@ -9,7 +9,7 @@ class Post {
   Post({
     required this.id,
     required this.title,
-    required this.contants,
+    required this.content,
     required this.writer,
     required this.imageUrl,
     required this.createdAt,
@@ -19,8 +19,8 @@ class Post {
   Post.formJson(Map<String, dynamic> map)
       : this(
           id: map['id'],
-          title: map['tilte'],
-          contants: map['contants'],
+          title: map['title'],
+          content: map['content'],
           writer: map['writer'],
           imageUrl: map['imageUrl'],
           createdAt: DateTime.parse(map['createAt']),
@@ -31,7 +31,7 @@ class Post {
     return {
       'id': id,
       'title': title,
-      'contants': contants,
+      'content': content,
       'writer': writer,
       'imageUrl': imageUrl,
       'createAt': createdAt.toIso8601String(),
