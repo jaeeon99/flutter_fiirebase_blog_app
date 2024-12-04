@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_fiirebase_blog_app/data/model/post.dart';
+import 'package:flutter_fiirebase_blog_app/ui/detail/detail_view_model.dart';
 import 'package:flutter_fiirebase_blog_app/ui/write/write_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends ConsumerWidget {
+  DetailPage(this.post);
+
+  Post post;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(detailViewModelProvider(post));
     return Scaffold(
       appBar: AppBar(
         actions: [
-          iconButton(Icons.delete, () {
+          iconButton(Icons.delete, () async {
             print('삭제 아이콘 클릭');
+            final vm = ref.read(detailViewModelProvider(post).notifier);
+            final result = await vm.deletPost();
+            if (result) {
+              Navigator.pop(context);
+            }
           }),
           iconButton(Icons.edit, () {
             print('수정 아이콘 클릭');
@@ -27,7 +40,7 @@ class DetailPage extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 500),
         children: [
           Image.network(
-            'https://picsum.photos/200/300',
+            state.imageUrl,
             fit: BoxFit.cover,
           ),
           SizedBox(
@@ -42,26 +55,25 @@ class DetailPage extends StatelessWidget {
               children: [
                 //
                 Text(
-                  'Today I Learned',
+                  state.title,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
                   height: 14,
                 ),
                 Text(
-                  '이재언',
+                  state.writer,
                   style: TextStyle(fontSize: 16),
                 ),
                 Text(
-                  '2024.11.19. 20:30',
+                  state.createdAt.toIso8601String(),
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w200),
                 ),
                 SizedBox(
                   height: 14,
                 ),
                 Text(
-                  'Flutter GridVeiw Study & firebase, 아 여럽다아아아아아아아아아아아아아아아아아아아아아아아ㅏ아아앙아ㅏㅇ아아ㅏ아아아아아아아아아앙ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ캌이ㅏㅣ아ㅣ릐ㅡㅂ쟈ㅜ언무러ㅕ뷻주압ㄴㅇㅂ' *
-                      3,
+                  state.content,
                   style: TextStyle(fontSize: 16),
                 ),
               ],
